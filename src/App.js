@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './App.css';
+import bigshaq from './bigshaq.jpg';
 
 class App extends Component {
   state = {
@@ -17,6 +18,10 @@ class App extends Component {
         parseInt(this.state.firstInput) + parseInt(this.state.secondInput),
       shouldQuickMafsHide: false,
     });
+    const audio = new Audio(
+      'https://cdn-resources.crowdcat.co/media/a027e3cf-bd0d-4183-83a1-081f6a47915a.mp3',
+    );
+    audio.play();
   };
 
   minus = () => {
@@ -38,6 +43,12 @@ class App extends Component {
           flexDirection: 'column',
         }}
       >
+        <img
+          src={bigshaq}
+          className={
+            this.state.shouldQuickMafsHide ? 'image' : 'image image-animation'
+          }
+        />
         <h1>QUICK MATHS CALCULATOR</h1>
         <div>
           <input
@@ -45,12 +56,14 @@ class App extends Component {
               this.setState({ firstInput: event.target.value })
             }
             type="number"
+            placeholder="Insert first number"
           />
           <input
             onChange={event =>
               this.setState({ secondInput: event.target.value })
             }
             type="number"
+            placeholder="Insert second number"
           />
           <br />
           <div
@@ -58,7 +71,7 @@ class App extends Component {
               display: 'flex',
               justifyContent: 'space-around',
               alignItems: 'center',
-              marginTop: 30,
+              marginTop: 20,
             }}
           >
             <button onClick={this.add}>Add</button>
