@@ -60,9 +60,7 @@ class App extends Component {
   };
 
   onFirstInputListenClick() {
-    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token', {
-      mode: 'no-cors',
-    })
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
       .then(function(response) {
         return response.text();
       })
@@ -95,9 +93,7 @@ class App extends Component {
   }
 
   onSecondInputListenClick() {
-    fetch('https://speech-shaq.herokuapp.com/speech-to-text/token', {
-      mode: 'no-cors',
-    })
+    fetch('https://speech-shaq.herokuapp.com/speech-to-text/token')
       .then(function(response) {
         return response.text();
       })

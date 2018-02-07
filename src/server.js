@@ -30,7 +30,7 @@ if (process.env.VCAP_SERVICES) {
 }
 
 app.use(express.static(__dirname + '/static'));
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'https://quick-maths-calculator.herokuapp.com/' }));
 
 // token endpoints
 // **Warning**: these endpoints should probably be guarded with additional authentication & authorization for production use
