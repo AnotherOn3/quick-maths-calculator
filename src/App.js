@@ -60,7 +60,7 @@ class App extends Component {
   };
 
   onFirstInputListenClick() {
-    fetch('/api/speech-to-text/token')
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
       .then(function(response) {
         return response.text();
       })
@@ -93,7 +93,7 @@ class App extends Component {
   }
 
   onSecondInputListenClick() {
-    fetch('/api/speech-to-text/token')
+    fetch('https://speech-shaq.herokuapp.com/speech-to-text/token')
       .then(function(response) {
         return response.text();
       })
@@ -127,7 +127,7 @@ class App extends Component {
 
   stopStreaming = () => {
     console.log('stream stopped');
-    fetch('/api/speech-to-text/token')
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
       .then(function(response) {
         return response.text();
       })
