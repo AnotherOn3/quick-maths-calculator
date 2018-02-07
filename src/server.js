@@ -30,7 +30,7 @@ if (process.env.VCAP_SERVICES) {
 }
 
 app.use(express.static(__dirname + '/static'));
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // token endpoints
 // **Warning**: these endpoints should probably be guarded with additional authentication & authorization for production use
