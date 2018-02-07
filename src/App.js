@@ -37,6 +37,10 @@ class App extends Component {
         parseInt(this.state.firstInput) + parseInt(this.state.secondInput),
       shouldQuickMafsHide: false,
     });
+    this.playSong();
+  };
+
+  playSong = () => {
     const index = this.getRandomInt(1, this.state.sounds.length);
     const audio = new Audio(this.state.sounds[index]);
     audio.play();
@@ -48,6 +52,7 @@ class App extends Component {
         parseInt(this.state.firstInput) - parseInt(this.state.secondInput),
       shouldQuickMafsHide: false,
     });
+    this.playSong();
   };
 
   render() {
