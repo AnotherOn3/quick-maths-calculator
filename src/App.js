@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import './App.css';
 import bigshaq from './bigshaq.jpg';
+import recognizeMic from 'watson-speech/speech-to-text/recognize-microphone';
 
 class App extends Component {
   state = {
@@ -25,6 +26,120 @@ class App extends Component {
       'https://cdn-resources.crowdcat.co/media/afc19ca1-2d4d-4b86-935f-78ed13cb0bec.mp3',
       'https://cdn-resources.crowdcat.co/media/b5afab28-676f-461f-b491-690a42a29d3b.mp3',
     ],
+    shouldAnimate: false,
+    text: '',
+    focusedInput: '',
+  };
+
+  translateWordIntoNumber = word => {
+    if (word.includes('one')) {
+      return 1;
+    } else if (word.includes('two') || word.includes('to')) {
+      return 2;
+    } else if (word.includes('three') || word.includes('free')) {
+      return 3;
+    } else if (word.includes('four') || word.includes('for')) {
+      return 4;
+    } else if (
+      word.includes('five') ||
+      word.includes('life') ||
+      word.includes('hi')
+    ) {
+      return 5;
+    } else if (word.includes('six')) {
+      return 6;
+    } else if (word.includes('seven')) {
+      return 7;
+    } else if (word.includes('eight')) {
+      return 8;
+    } else if (word.includes('nine')) {
+      return 9;
+    } else {
+      return { number: 11 };
+    }
+  };
+
+  onFirstInputListenClick() {
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
+      .then(function(response) {
+        return response.text();
+      })
+      .then(token => {
+        console.log('token is', token);
+        var stream = recognizeMic({
+          token: token,
+          objectMode: true, // send objects instead of text
+          extractResults: true, // convert {results: [{alternatives:[...]}], result_index: 0} to {alternatives: [...], index: 0}
+          format: false, // optional - performs basic formatting on the results such as capitals an periods
+        });
+        stream.on('data', data => {
+          // if (typeof this.secondInput.value != NaN) {
+          //   stream.stop();
+          // }
+          this.setState({
+            firstInput: this.translateWordIntoNumber(
+              data.alternatives[0].transcript,
+            ),
+          });
+          stream.stop();
+        });
+        stream.on('error', function(err) {
+          console.log(err);
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  onSecondInputListenClick() {
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
+      .then(function(response) {
+        return response.text();
+      })
+      .then(token => {
+        console.log('token is', token);
+        var stream = recognizeMic({
+          token: token,
+          objectMode: true, // send objects instead of text
+          extractResults: true, // convert {results: [{alternatives:[...]}], result_index: 0} to {alternatives: [...], index: 0}
+          format: false, // optional - performs basic formatting on the results such as capitals an periods
+        });
+        stream.on('data', data => {
+          // if (typeof this.secondInput.value != NaN) {
+          //   stream.stop();
+          // }
+          this.setState({
+            secondInput: this.translateWordIntoNumber(
+              data.alternatives[0].transcript,
+            ),
+          });
+          stream.stop();
+        });
+        stream.on('error', function(err) {
+          console.log(err);
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  stopStreaming = () => {
+    console.log('stream stopped');
+    fetch('https://speech-shaq.herokuapp.com/api/speech-to-text/token')
+      .then(function(response) {
+        return response.text();
+      })
+      .then(token => {
+        var stream = recognizeMic({
+          token: token,
+          objectMode: true, // send objects instead of text
+          extractResults: true, // convert {results: [{alternatives:[...]}], result_index: 0} to {alternatives: [...], index: 0}
+          format: false, // optional - performs basic formatting on the results such as capitals an periods
+        });
+        stream.stop();
+      });
   };
 
   getRandomInt = (min, max) => {
@@ -69,7 +184,7 @@ class App extends Component {
         <img
           src={bigshaq}
           className={
-            this.state.shouldQuickMafsHide ? 'image' : 'image image-animation'
+            this.state.shouldQuickMafsHide ? 'image' : 'image-animation'
           }
         />
         <h1>QUICK MATHS CALCULATOR</h1>
@@ -80,6 +195,9 @@ class App extends Component {
             }
             type="number"
             placeholder="Insert first number"
+            ref={input => (this.firstInput = input)}
+            value={this.state.firstInput}
+            onFocus={this.onFirstInputListenClick.bind(this)}
           />
           <input
             onChange={event =>
@@ -87,6 +205,9 @@ class App extends Component {
             }
             type="number"
             placeholder="Insert second number"
+            ref={input => (this.secondInput = input)}
+            value={this.state.secondInput}
+            onFocus={this.onSecondInputListenClick.bind(this)}
           />
           <br />
           <div
@@ -105,6 +226,7 @@ class App extends Component {
             {this.state.shouldQuickMafsHide ? '' : this.state.quickMafs}
           </h2>
         </div>
+        <div style={{ fontSize: '40px' }}>{this.state.text}</div>
       </div>
     );
   }
